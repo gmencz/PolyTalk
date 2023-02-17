@@ -7,6 +7,11 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
+import { useEffect, useState } from "react";
+import type { Socket } from "socket.io-client";
+import type { DefaultEventsMap } from "socket.io/dist/typed-events";
+import { connect } from "./utils/ws.client";
+import { wsContext } from "./utils/ws-context";
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
@@ -15,6 +20,17 @@ export const meta: MetaFunction = () => ({
 });
 
 export default function App() {
+  let [socket, setSocket] =
+    useState<Socket<DefaultEventsMap, DefaultEventsMap>>();
+
+  useEffect(() => {
+    let connection = connect();
+    setSocket(connection);
+    return () => {
+      connection.close();
+    };
+  }, []);
+
   return (
     <html lang="en">
       <head>
@@ -22,7 +38,9 @@ export default function App() {
         <Links />
       </head>
       <body>
-        <Outlet />
+        <wsContext.Provider value={socket}>
+          <Outlet />
+        </wsContext.Provider>
         <ScrollRestoration />
         <Scripts />
         <LiveReload />

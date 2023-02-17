@@ -1,4 +1,17 @@
+import { useEffect } from "react";
+import { useWsContext } from "~/utils/ws-context";
+
 export default function Index() {
+  const socket = useWsContext();
+
+  useEffect(() => {
+    if (!socket) return;
+
+    socket.on("event", (data) => {
+      console.log(data);
+    });
+  }, [socket]);
+
   return (
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.4" }}>
       <h1>Welcome to Remix</h1>
