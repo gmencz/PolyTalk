@@ -8,5 +8,5 @@ export const wsContext = createContext<
 
 export function useWsContext() {
   const socket = useContext(wsContext);
-  return socket;
+  return { socket };
 }

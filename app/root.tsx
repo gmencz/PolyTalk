@@ -1,4 +1,4 @@
-import type { MetaFunction } from "@remix-run/node";
+import type { LinksFunction, MetaFunction } from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -12,10 +12,15 @@ import type { Socket } from "socket.io-client";
 import type { DefaultEventsMap } from "socket.io/dist/typed-events";
 import { connect } from "./utils/ws.client";
 import { wsContext } from "./utils/ws-context";
+import stylesheet from "~/tailwind.css";
+
+export const links: LinksFunction = () => [
+  { rel: "stylesheet", href: stylesheet },
+];
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
-  title: "New Remix App",
+  title: "PolyTalk",
   viewport: "width=device-width,initial-scale=1",
 });
 
@@ -32,12 +37,12 @@ export default function App() {
   }, []);
 
   return (
-    <html lang="en">
+    <html lang="en" className="h-full">
       <head>
         <Meta />
         <Links />
       </head>
-      <body>
+      <body className="h-full">
         <wsContext.Provider value={socket}>
           <Outlet />
         </wsContext.Provider>
